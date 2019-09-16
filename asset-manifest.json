@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/CounterPlus/static/css/main.2cce8147.chunk.css",
+    "main.js": "/CounterPlus/static/js/main.9dc6b689.chunk.js",
+    "main.js.map": "/CounterPlus/static/js/main.9dc6b689.chunk.js.map",
+    "runtime~main.js": "/CounterPlus/static/js/runtime~main.91188805.js",
+    "runtime~main.js.map": "/CounterPlus/static/js/runtime~main.91188805.js.map",
+    "static/js/2.515ccfbb.chunk.js": "/CounterPlus/static/js/2.515ccfbb.chunk.js",
+    "static/js/2.515ccfbb.chunk.js.map": "/CounterPlus/static/js/2.515ccfbb.chunk.js.map",
+    "index.html": "/CounterPlus/index.html",
+    "precache-manifest.94c4b0ec128f2848b68d65dfb48e23ba.js": "/CounterPlus/precache-manifest.94c4b0ec128f2848b68d65dfb48e23ba.js",
+    "service-worker.js": "/CounterPlus/service-worker.js",
+    "static/css/main.2cce8147.chunk.css.map": "/CounterPlus/static/css/main.2cce8147.chunk.css.map",
+    "static/media/logo.svg": "/CounterPlus/static/media/logo.5d5d9eef.svg"
+  }
+}
