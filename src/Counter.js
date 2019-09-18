@@ -1,21 +1,6 @@
 import React, { Component } from 'react'
-import { render } from 'react-dom'
-import { makeStyles } from '@material-ui/core/styles';
 import Draggable from 'react-draggable';
-
-const SWIPED_DISTANCE = 150
-
-const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    title: {
-        flexGrow: 1,
-    },
-}));
+import { Grid } from '@material-ui/core'
 
 class Counter extends Component {
 
@@ -29,7 +14,25 @@ class Counter extends Component {
             p2: {
                 score: 0,
                 set: 0
-            }
+            },
+            leftServes: true,
+            posReversed: false
+        }
+        this.manager = this.props.manager;
+        this.manager.updateContentInterface = (p1_, p2_, leftServes_, posReversed_) => {
+            this.setState({
+                p1: {
+                    score: p1_.score,
+                    set: p1_.set
+                },
+                p2: {
+                    score: p2_.score,
+                    set: p2_.set
+                },
+                leftServes: leftServes_,
+                posReversed: posReversed_
+            })
+            console.log(leftServes_)
         }
     }
 
@@ -40,30 +43,25 @@ class Counter extends Component {
 
     render() {
 
+        var scoreViews = (!this.state.posReversed ? [true, false] : [false, true]).map((isP1) => {
+            return (
+                <ScoreView
+                    scoreData={isP1 ? this.state.p1 : this.state.p2}
+                    onPositiveSwipe={() => {
+                        this.manager.addScore(isP1);
+                    }}
+                    onNegativeSwipe={() => {
+                        this.manager.minusScore(isP1);
+                    }
+                    }
+                    serveIndicate={isP1 ? this.state.leftServes : !this.state.leftServes}
+                />
+            )
+        })
+
         return (
             <div style={{ display: 'flex', flexDirection: 'col', alignItems: 'center', justifyContent: 'center' }}>
-                <ScoreView
-                    scoreData={this.state.p1}
-                    onPositiveSwipe={() => {
-                        console.log("positive swipe")
-                    }}
-                    onNegativeSwipe={() => {
-                        console.log("negative swipe")
-                    }
-                    }
-                    bgColor='red'
-                />
-                <ScoreView
-                    scoreData={this.state.p2}
-                    onPositiveSwipe={() => {
-                        console.log("positive swipe")
-                    }}
-                    onNegativeSwipe={() => {
-                        console.log("negative swipe")
-                    }
-                    }
-                    bgColor='blue'
-                />
+                {scoreViews}
             </div>
         )
     }
@@ -111,9 +109,8 @@ class ScoreView extends Component {
         // スワイプ量に合わせて、要素の位置を変更する.
         let style = {
             width: '50vw',
-            height: '100vh',
             fontSize: '100',
-            backgroundColor: this.props.bgColor
+            height: '100vh',
         }
 
         return (
@@ -129,14 +126,37 @@ class ScoreView extends Component {
                 onStop={this.onFinishSwipe}>
                 <div>
                     <div className="handle" style={style}>
-                        <div>
-                            <div style={{
-                                textAlign: 'center',
-                            }}>
-                                <h1 style={{ margin: 0, marginBottom: '0', padding: 0, fontSize: Math.min(this.state.windowHeight * 0.5, this.state.windowWidth * 0.7), backgroundColor: 'green' }}>{this.props.scoreData.score}</h1>
-                                <h2 style={{ margin: 0, fontSize: Math.min(this.state.windowHeight * 0.2, this.state.windowWidth * 0.2), height: this.state.windowHeight * 0.2 }}>{this.props.scoreData.score}</h2>
-                            </div>
-                        </div>
+
+
+                        <Grid
+                            container
+                            spacing={0}
+                            direction="column"
+                            alignItems="center"
+                            justify="center"
+                            style={{ minHeight: '100vh' }}
+                        >
+                            <Grid item xs={12}>
+                                <div>
+                                    <div style={{
+                                        textAlign: 'center', marginTop: -70
+                                    }}>
+                                        <h1 style={{
+                                            color: '#fff',
+                                            fontSize: Math.min(this.state.windowHeight * 0.5, this.state.windowWidth * 0.45),
+                                            userSelect: 'none', margin: 0, marginBottom: '0', padding: 0
+                                        }}>{this.props.scoreData.score}</h1>
+                                        <h2 style={{
+                                            color: '#fff',
+                                            fontSize: Math.min(this.state.windowHeight * 0.2, this.state.windowWidth * 0.2),
+                                            userSelect: 'none', margin: 0
+                                        }}>{this.props.scoreData.set}</h2>
+                                    </div>
+                                    <hr size="8" style={{ border: 0 }} color={this.props.serveIndicate ? '#ff2477' : 'transparent'} />
+                                </div>
+                            </Grid>
+                        </Grid>
+
                     </div>
                 </div>
             </Draggable>
