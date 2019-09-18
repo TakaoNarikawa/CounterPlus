@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/CounterPlus/static/css/main.34de6062.chunk.css",
-    "main.js": "/CounterPlus/static/js/main.862019d0.chunk.js",
-    "main.js.map": "/CounterPlus/static/js/main.862019d0.chunk.js.map",
+    "main.js": "/CounterPlus/static/js/main.75dcb19a.chunk.js",
+    "main.js.map": "/CounterPlus/static/js/main.75dcb19a.chunk.js.map",
     "runtime~main.js": "/CounterPlus/static/js/runtime~main.91188805.js",
     "runtime~main.js.map": "/CounterPlus/static/js/runtime~main.91188805.js.map",
-    "static/js/2.d9b395c0.chunk.js": "/CounterPlus/static/js/2.d9b395c0.chunk.js",
-    "static/js/2.d9b395c0.chunk.js.map": "/CounterPlus/static/js/2.d9b395c0.chunk.js.map",
+    "static/js/2.57546fd7.chunk.js": "/CounterPlus/static/js/2.57546fd7.chunk.js",
+    "static/js/2.57546fd7.chunk.js.map": "/CounterPlus/static/js/2.57546fd7.chunk.js.map",
     "index.html": "/CounterPlus/index.html",
-    "precache-manifest.a99476a6b2186e1601e8e7c2775266d9.js": "/CounterPlus/precache-manifest.a99476a6b2186e1601e8e7c2775266d9.js",
+    "precache-manifest.80c973dfba29545f905f157733cd977c.js": "/CounterPlus/precache-manifest.80c973dfba29545f905f157733cd977c.js",
     "service-worker.js": "/CounterPlus/service-worker.js",
     "static/css/main.34de6062.chunk.css.map": "/CounterPlus/static/css/main.34de6062.chunk.css.map"
   }
