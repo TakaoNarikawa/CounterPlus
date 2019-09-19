@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/CounterPlus/static/css/main.34de6062.chunk.css",
-    "main.js": "/CounterPlus/static/js/main.51523c50.chunk.js",
-    "main.js.map": "/CounterPlus/static/js/main.51523c50.chunk.js.map",
+    "main.js": "/CounterPlus/static/js/main.8485162e.chunk.js",
+    "main.js.map": "/CounterPlus/static/js/main.8485162e.chunk.js.map",
     "runtime~main.js": "/CounterPlus/static/js/runtime~main.91188805.js",
     "runtime~main.js.map": "/CounterPlus/static/js/runtime~main.91188805.js.map",
     "static/js/2.eb8f30ad.chunk.js": "/CounterPlus/static/js/2.eb8f30ad.chunk.js",
     "static/js/2.eb8f30ad.chunk.js.map": "/CounterPlus/static/js/2.eb8f30ad.chunk.js.map",
     "index.html": "/CounterPlus/index.html",
-    "precache-manifest.e17b6222cd34406aaaeac6debacac01c.js": "/CounterPlus/precache-manifest.e17b6222cd34406aaaeac6debacac01c.js",
+    "precache-manifest.37e8d6b8c429cb38fb9c9d67743c224a.js": "/CounterPlus/precache-manifest.37e8d6b8c429cb38fb9c9d67743c224a.js",
     "service-worker.js": "/CounterPlus/service-worker.js",
     "static/css/main.34de6062.chunk.css.map": "/CounterPlus/static/css/main.34de6062.chunk.css.map"
   }
