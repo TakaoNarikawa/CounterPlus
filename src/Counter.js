@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Draggable from 'react-draggable';
-import { Grid } from '@material-ui/core'
+import { Grid, Box } from '@material-ui/core'
 
 const xor = (a, b) => {
     return (a || b) && !(a && b);
@@ -39,27 +39,82 @@ class Counter extends Component {
         }
     }
     render() {
-
         var scoreViews = (!xor(this.state.posReversed, this.props.initialPosReversed) ? [true, false] : [false, true]).map((isP1) => {
             return (
                 <ScoreView
                     scoreData={isP1 ? this.state.p1 : this.state.p2}
                     onPositiveSwipe={() => {
-                        this.manager.addScore(isP1);
+                        if (!this.props.swipeReversed) {
+                            this.manager.addScore(isP1);
+                        } else {
+                            this.manager.minusScore(isP1);
+                        }
                     }}
                     onNegativeSwipe={() => {
-                        this.manager.minusScore(isP1);
+                        if (!this.props.swipeReversed) {
+                            this.manager.minusScore(isP1);
+                        } else {
+                            this.manager.addScore(isP1);
+                        }
+
                     }
                     }
                     serveIndicate={isP1 ? this.state.leftServes : !this.state.leftServes}
+                    key={isP1 ? 0 : 1}
                 />
             )
         })
 
         return (
-            <div style={{ display: 'flex', flexDirection: 'col', alignItems: 'center', justifyContent: 'center' }}>
-                {scoreViews}
+            <div>
+
+                <div style={{ display: 'flex', flexDirection: 'col', alignItems: 'center', justifyContent: 'center', position: 'absolute', backgroundColor: '#364150', paddingTop: 30 }}>
+                    {scoreViews}
+                </div>
+                {(this.state.p1.score + this.state.p2.score) % 6 === 0 && (this.state.p1.score > 0 || this.state.p2.score > 0) ? <Notification /> : null}
+
             </div>
+        )
+    }
+}
+
+
+class Notification extends Component {
+
+    constructor() {
+        super();
+        this.state = {
+            windowHeight: window.innerHeight,
+            windowWidth: window.innerWidth
+        }
+        this.handleResize = this.handleResize.bind(this);
+    }
+    componentDidMount() {
+        window.addEventListener("resize", this.handleResize);
+    }
+    componentWillUnmount() {
+        window.addEventListener("resize", null);
+    }
+    handleResize(WindowSize, event) {
+        setTimeout(function () {
+            this.setState({ windowHeight: window.innerHeight, windowWidth: window.innerWidth })
+        }.bind(this), 500)
+    }
+
+    render() {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', position: 'absolute', marginTop: 80, width: '100vw' }}>
+                <Box
+                    color="#fff"
+                    bgcolor="rgba(0,0,0,0.5)"
+                    fontSize={Math.min(this.state.windowHeight * 0.08, this.state.windowWidth * 0.08)}
+                    p={{ xs: 2, sm: 3, md: 4 }}
+                    style={{ borderRadius: 15 }}
+                >
+                    タオル使用可能
+                </Box>
+            </div>
+
         )
     }
 }
@@ -82,7 +137,9 @@ class ScoreView extends Component {
         window.addEventListener("resize", null);
     }
     handleResize(WindowSize, event) {
-        this.setState({ windowHeight: window.innerHeight, windowWidth: window.innerWidth })
+        setTimeout(function () {
+            this.setState({ windowHeight: window.innerHeight, windowWidth: window.innerWidth })
+        }.bind(this), 500)
     }
 
     onStartSwipe = (e, data) => {
@@ -105,7 +162,7 @@ class ScoreView extends Component {
         let style = {
             width: '50vw',
             fontSize: '100',
-            height: '100vh',
+            height: this.state.windowHeight,
         }
 
         return (

@@ -2,11 +2,8 @@ import React, { Component } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/styles';
 import { withRouter } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, IconButton, Grid, MenuItem, Menu, Button, Card, CardContent, CardActions } from '@material-ui/core'
-import ToggleButton from '@material-ui/lab/ToggleButton'
-import { ArrowBackIos, ArrowForwardIos, SwapHorizOutlined } from '@material-ui/icons';
-import Counter from './Counter'
-import { RemoveScroll } from 'react-remove-scroll';
+import { AppBar, Toolbar, Typography, IconButton, Grid, Card, CardContent } from '@material-ui/core'
+import { ArrowBackIos } from '@material-ui/icons';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 import { MuiThemeProvider } from '@material-ui/core/styles';
@@ -64,7 +61,7 @@ class ResultView extends Component {
   constructor(props) {
     super(props);
     if (!this.props.location || !this.props.location.state) {
-      this.props.history.push({ pathname: '/' })
+      this.props.history.push({ pathname: '/CounterPlus/' })
     }
     this.classes = props.classes;
     this.state = {
@@ -99,7 +96,7 @@ class ResultView extends Component {
                 <Grid item>
                   <IconButton aria-label="undo" className={this.classes.margin}
                     onClick={() => {
-                      this.props.history.push({ pathname: '/' })
+                      this.props.history.push({ pathname: '/CounterPlus/' })
                     }}>
                     <ArrowBackIos color="secondary" />
                   </IconButton>
@@ -152,9 +149,10 @@ class ResultCard extends Component {
 
   render() {
     let finalRes = this.data[this.data.length - 1];
-    let subRes = this.data.map((res) =>
-      <Typography variant="h4" component="p">
-        {res.p1score} - {res.p2score}
+    let indices = [...Array(this.data.length).keys()]
+    let subRes = indices.map((i) =>
+      <Typography variant="h4" component="p" id={i}>
+        {this.data[i].p1score} - {this.data[i].p2score}
       </Typography>
     )
 

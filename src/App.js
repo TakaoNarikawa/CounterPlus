@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/styles';
 import { withRouter } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, IconButton, Grid, MenuItem, Menu, Button } from '@material-ui/core'
+import { AppBar, Toolbar, Typography, IconButton, Grid, MenuItem, Menu, Button, FormControlLabel, Checkbox, FormHelperText, FormControl, Select } from '@material-ui/core'
 import ToggleButton from '@material-ui/lab/ToggleButton'
 import { ArrowBackIos, ArrowForwardIos, SwapHorizOutlined } from '@material-ui/icons';
 import Counter from './Counter'
@@ -14,6 +14,8 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import ScoreManager from './ScoreManager'
 
 import MenuIcon from '@material-ui/icons/Menu';
+
+import { Helmet } from 'react-helmet'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -54,17 +56,26 @@ class App extends Component {
     this.classes = props.classes;
     this.state = {
       windowWidth: window.innerWidth,
+      windowHeight: window.innerHeight,
       redoEnabled: false,
       undoEnabled: false,
       posReversed: false,
+      swipeReversed: false,
       anchorEl: null,
-      setAnchorEl: null
+      setAnchorEl: null,
+      setNum: 5
     }
     this.manager = new ScoreManager();
     this.manager.updateBarInterface = (redo, undo) => {
       this.setState({
         redoEnabled: redo,
         undoEnabled: undo,
+      })
+    }
+    this.manager.onEndGame = (res) => {
+      this.props.history.push({
+        pathname: '/CounterPlus/result',
+        state: { result: res }
       })
     }
 
@@ -78,8 +89,11 @@ class App extends Component {
     window.addEventListener("resize", null);
   }
   handleResize(WindowSize, event) {
-    console.log("fooo")
-    this.setState({ windowWidth: window.innerWidth })
+
+    setTimeout(function () {
+      window.scrollTo(0, 0);
+      this.setState({ windowWidth: window.innerWidth })
+    }.bind(this), 500)
   }
 
   handleClick = (event) => {
@@ -93,15 +107,31 @@ class App extends Component {
   render() {
 
     let appBar = (left, right) => {
-      if (this.state.windowWidth > 500) {
+      if (this.state.windowWidth > 450) {
         return (
-          <AppBar position="static" color="primary" style={{ boxShadow: 'none' }}>
+          <AppBar position="fixed" color="primary" style={{ boxShadow: 'none' }}>
             <Toolbar>
               <Grid
                 justify="space-between" // Add it here :)
                 container
               >
-                {left}
+                {left("20vw", "0%")}
+
+                {right}
+
+              </Grid>
+            </Toolbar>
+          </AppBar>
+        )
+      } else if (this.state.windowWidth > 370) {
+        return (
+          <AppBar position="fixed" color="primary" style={{ boxShadow: 'none' }}>
+            <Toolbar>
+              <Grid
+                justify="space-between" // Add it here :)
+                container
+              >
+                {left("12vw", "0%")}
 
                 {right}
 
@@ -111,36 +141,36 @@ class App extends Component {
         )
       } else {
         return (
-          <div>
-            <AppBar position="static" color="primary" style={{ boxShadow: 'none' }}>
-              <Toolbar>
-                <Grid
-                  justify="space-between" // Add it here :)
-                  container
-                >
-                  <div />
+          <AppBar position="fixed" color="primary" style={{ boxShadow: 'none' }}>
+            <Toolbar>
+              <Grid
+                justify="space-between" // Add it here :)
+                container
+              >
+                {left("8vw", "0%")}
 
-                  {right}
+                {right}
 
-                </Grid>
-              </Toolbar>
-            </AppBar>
-          </div>
+              </Grid>
+            </Toolbar>
+          </AppBar>
         )
       }
     }
 
-    let title = (
-      <Grid item>
-        <Typography variant="h6" className={this.classes.title}>
-          <img src="https://i.imgur.com/WLv1TO2.png" alt="CounterPlus" height="20vw"
-            style={{
-              position: 'absolute', top: '50%',
-              transform: 'translate(0%, -50%)'
-            }} />
-        </Typography>
-      </Grid>
-    )
+    let title = (iconSize, transform) => {
+      return (
+        <Grid item>
+          <Typography variant="h6" className={this.classes.title}>
+            <img src="https://i.imgur.com/WLv1TO2.png" alt="CounterPlus" height={iconSize}
+              style={{
+                position: 'absolute', top: '50%', left: { transform },
+                transform: 'translate(0%, -50%)'
+              }} />
+          </Typography>
+        </Grid>
+      )
+    }
 
     let menu = (
       <Grid item>
@@ -175,6 +205,7 @@ class App extends Component {
           <Button aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick}>
             <MenuIcon color="secondary" />
           </Button>
+
           <Menu
             id="simple-menu"
             anchorEl={this.state.anchorEl}
@@ -189,29 +220,99 @@ class App extends Component {
               }
               this.handleClose();
             }}>リセット</MenuItem>
+
             <MenuItem onClick={() => {
               let res = this.manager.result();
               this.props.history.push({
-                pathname: '/result',
+                pathname: '/CounterPlus/result',
                 state: { result: res }
               })
+            }}><div style={{ textAlign: 'center' }}>対戦結果を見る</div></MenuItem>
 
-            }}>対戦結果を見る</MenuItem>
+            <MenuItem >
+              <FormControlLabel
+                value="swipeReversed"
+                control={<
+                  Checkbox color="primary"
+                  onChange={e => {
+                    this.setState({ swipeReversed: !this.state.swipeReversed });
+                    this.handleClose();
+                  }}
+                  checked={this.state.swipeReversed}
+                />}
+                label="スワイプの向きを逆にする"
+                labelPlacement="start"
+                style={{ marginLeft: 0 }}
+              />
+            </MenuItem>
+
+            {/* <FormControl>
+              <Select
+                value={10}
+                onChange={() => { }}
+                inputProps={{
+                  name: 'age',
+                  id: 'age-simple',
+                }}
+              >
+                <MenuItem value={10}>Ten</MenuItem>
+                <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem>
+              </Select>
+            </FormControl> */}
+
+            <MenuItem >
+              <FormControl>
+                <Select
+                  value={this.state.setNum}
+                  onChange={(e) => {
+                    let finalSetNum = this.manager.calcFinalSetNum(e.target.value)
+                    if (this.manager.p1.set > finalSetNum || this.manager.p2.set > finalSetNum) {
+                      alert("現在のセット数は\nすでに指定された数のファイナルセットを上回っています")
+                    } else {
+                      this.setState({ setNum: e.target.value })
+                      this.manager.changeGameset(e.target.value)
+                    }
+                  }}
+                  name="name"
+                  inputProps={{
+                    name: 'gameset',
+                    id: 'gameset-id',
+                  }}
+                >
+                  <MenuItem value={3}>3ゲーム</MenuItem>
+                  <MenuItem value={5}>5ゲーム</MenuItem>
+                  <MenuItem value={7}>7ゲーム</MenuItem>
+                </Select>
+              </FormControl>
+
+            </MenuItem>
+
+
           </Menu>
 
         </div>
-      </Grid>
+      </Grid >
     )
     return (
       <div className={this.classes.root} >
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <Helmet>
+          <meta name="apple-mobile-web-app-title" content="CounterPlus" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+          <title>CounterPlus</title>
+        </Helmet>
+
         <RemoveScroll>
           <MuiThemeProvider theme={theme} >
             {appBar(title, menu)}
           </MuiThemeProvider>
-          <div style={{ backgroundColor: '#364150' }}><Counter manager={this.manager} initialPosReversed={this.state.posReversed} /></div>
+          <div>
+            <Counter
+              manager={this.manager}
+              initialPosReversed={this.state.posReversed}
+              swipeReversed={this.state.swipeReversed}
+            />
+          </div>
         </RemoveScroll>
       </div >
     );

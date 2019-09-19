@@ -27,9 +27,23 @@ export default class ScoreManager {
 
         this.servReversed = false;
         this.posReversed = false;
+        this.finalSetChangeCoatHasDone = false
+        this.finalSetReversed = false
 
         this.log = [new Score(this.p1, this.p2, this.servReversed, this.posReversed)];
         this.logIndex = 0;
+
+        this.changeGameset(5);
+    }
+
+    changeGameset = (n) => {
+        this.gameSetNum = n;
+        this.finalSetNum = this.calcFinalSetNum(n);
+        console.log(this.finalSetNum)
+    }
+
+    calcFinalSetNum = (n) => {
+        return Math.floor(n / 2)
     }
 
     addScore = (isP1) => {
@@ -53,6 +67,14 @@ export default class ScoreManager {
         } else {
             this.p2.score += isPlus ? 1 : -1;
         }
+
+        console.log(this.p1.set, this.finalSetNum, this.p2.set, this.finalSetNum, this.p1.score, this.p2.score, this.finalSetChangeCoatHasDone)
+        if (this.p1.set === this.finalSetNum && this.p2.set === this.finalSetNum && (this.p1.score === 5 || this.p2.score === 5) && !this.finalSetChangeCoatHasDone) {
+            alert("コートチェンジをしてください")
+            this.finalSetChangeCoatHasDone = true;
+            this.finalSetReversed = true;
+        }
+
         this.changeServReversed();
         this.pushHistory();
         this.updateInterface();
@@ -72,11 +94,16 @@ export default class ScoreManager {
             this.p2.set += 1;
         }
 
-        this.posReversed = (this.p1.set + this.p2.set) % 2 === 1
-
-        this.changeServReversed();
-        this.pushHistory();
-        this.updateInterface();
+        if (this.p1.set > this.finalSetNum || this.p2.set > this.finalSetNum) {
+            let res = this.result();
+            this.onEndGame(res);
+            console.log(res)
+        } else {
+            this.posReversed = (this.p1.set + this.p2.set) % 2 === 1
+            this.changeServReversed();
+            this.pushHistory();
+            this.updateInterface();
+        }
     }
 
     changeServReversed = () => {
@@ -133,6 +160,7 @@ export default class ScoreManager {
 
         this.servReversed = false;
         this.posReversed = false;
+        this.finalSetChangeCoatHasDone = false
 
         this.log = [new Score(this.p1, this.p2, this.servReversed, this.posReversed)];
         this.logIndex = 0;
@@ -158,8 +186,13 @@ export default class ScoreManager {
                 let setResult = {
                     p1score: log.p1,
                     p2score: log.p2,
-                    p1set: log.p1set + log.p1 > log.p2 ? 1 : 0,
-                    p2set: log.p2set + log.p1 < log.p2 ? 1 : 0
+                    p1set: log.p1set,
+                    p2set: log.p2set
+                }
+                if (log.p1 > log.p2) {
+                    setResult.p1set += 1
+                } else {
+                    setResult.p2set += 1
                 }
                 setResults.push(setResult)
             }
@@ -188,7 +221,7 @@ export default class ScoreManager {
         return Math.abs(p1 - p2) > 1 && (p1 > 10 || p2 > 10);
     }
     isPosReversed = () => {
-        return xor(this.posReversed, this.primServReversed);
+        return xor(xor(this.posReversed, this.primServReversed), this.finalSetReversed);
     }
     leftServes = () => {
         return !xor(this.posReversed, this.servReversed)

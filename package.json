@@ -11,6 +11,7 @@
     "react-dom": "^16.9.0",
     "react-draggable": "^4.0.3",
     "react-hammerjs": "^1.0.1",
+    "react-helmet": "^5.2.1",
     "react-native-viewport-units": "0.0.5",
     "react-remove-scroll": "^2.0.4",
     "react-router-dom": "^5.0.1",
