@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.4.2",
     "@material-ui/icons": "^4.4.1",
+    "@material-ui/lab": "^4.0.0-alpha.26",
     "hammerjs": "^2.0.8",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
@@ -12,7 +13,9 @@
     "react-hammerjs": "^1.0.1",
     "react-native-viewport-units": "0.0.5",
     "react-remove-scroll": "^2.0.4",
-    "react-scripts": "3.1.1"
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "3.1.1",
+    "react-share": "^3.0.1"
   },
   "homepage": "http://caprolactam2450.github.io/CounterPlus",
   "scripts": {

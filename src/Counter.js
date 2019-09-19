@@ -2,6 +2,10 @@ import React, { Component } from 'react'
 import Draggable from 'react-draggable';
 import { Grid } from '@material-ui/core'
 
+const xor = (a, b) => {
+    return (a || b) && !(a && b);
+}
+
 class Counter extends Component {
 
     constructor(props) {
@@ -32,18 +36,11 @@ class Counter extends Component {
                 leftServes: leftServes_,
                 posReversed: posReversed_
             })
-            console.log(leftServes_)
         }
     }
-
-    eventLogger = (e, data) => {
-        console.log('Event: ', e);
-        console.log('Data: ', data);
-    };
-
     render() {
 
-        var scoreViews = (!this.state.posReversed ? [true, false] : [false, true]).map((isP1) => {
+        var scoreViews = (!xor(this.state.posReversed, this.props.initialPosReversed) ? [true, false] : [false, true]).map((isP1) => {
             return (
                 <ScoreView
                     scoreData={isP1 ? this.state.p1 : this.state.p2}
@@ -94,12 +91,10 @@ class ScoreView extends Component {
 
     onFinishSwipe = (e, data) => {
         let deltaY = data.y - this.offset;
-        let height = window.innerHeight;
-        let rate = deltaY / height;
 
-        if (rate > 0.3) {
+        if (deltaY > 100) {
             this.props.onPositiveSwipe();
-        } else if (rate < -0.3) {
+        } else if (deltaY < -100) {
             this.props.onNegativeSwipe();
         }
     };
@@ -143,16 +138,16 @@ class ScoreView extends Component {
                                     }}>
                                         <h1 style={{
                                             color: '#fff',
-                                            fontSize: Math.min(this.state.windowHeight * 0.5, this.state.windowWidth * 0.45),
+                                            fontSize: Math.min(this.state.windowHeight * 0.45, this.state.windowWidth * 0.45),
                                             userSelect: 'none', margin: 0, marginBottom: '0', padding: 0
                                         }}>{this.props.scoreData.score}</h1>
                                         <h2 style={{
                                             color: '#fff',
-                                            fontSize: Math.min(this.state.windowHeight * 0.2, this.state.windowWidth * 0.2),
+                                            fontSize: Math.min(this.state.windowHeight * 0.1, this.state.windowWidth * 0.2),
                                             userSelect: 'none', margin: 0
                                         }}>{this.props.scoreData.set}</h2>
                                     </div>
-                                    <hr size="8" style={{ border: 0 }} color={this.props.serveIndicate ? '#ff2477' : 'transparent'} />
+                                    <hr size="8" style={{ border: 0, width: Math.min(this.state.windowHeight * 0.5, this.state.windowWidth * 0.45) }} color={this.props.serveIndicate ? '#ff2477' : 'transparent'} />
                                 </div>
                             </Grid>
                         </Grid>
