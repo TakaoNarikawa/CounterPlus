@@ -1,61 +1,87 @@
-import React, { Component } from 'react'
-import { makeStyles } from '@material-ui/core/styles';
-import { withStyles } from '@material-ui/styles';
-import { withRouter } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, IconButton, Grid, MenuItem, Menu, Button, FormControlLabel, Checkbox, FormHelperText, FormControl, Select } from '@material-ui/core'
-import ToggleButton from '@material-ui/lab/ToggleButton'
-import { ArrowBackIos, ArrowForwardIos, SwapHorizOutlined } from '@material-ui/icons';
-import Counter from './Counter'
-import { RemoveScroll } from 'react-remove-scroll';
+import React, { useState } from 'react';
+import styled from 'styled-components';
 
-import { createMuiTheme } from '@material-ui/core/styles';
-import { MuiThemeProvider } from '@material-ui/core/styles';
+import { AppBar, Toolbar, Typography, Grid, ToggleButton } from '@material-ui/core'
 
-import ScoreManager from './ScoreManager'
 
-import MenuIcon from '@material-ui/icons/Menu';
+export default () => {
 
-import { Helmet } from 'react-helmet'
+  const [redoEnabled, undoEnabled, posReversed, swipeReversed] = useState(false)
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-  },
-  title: {
-    flexGrow: 1,
-  },
-}));
+  const title = (iconSize) => {
 
-const theme = createMuiTheme({
-  type: 'light',
-  palette: {
-    primary: {
-      light: '#000000',
-      main: '#364150',
-      contrastText: '#fff',
-    },
-    // button enabled
-    secondary: {
-      light: '#000000',
-      main: '#C2BDCE',
-      contrastText: '#fff',
-    },
-    // button disabled
-    error: {
-      light: '#000000',
-      main: '#2b2133',
-      contrastText: '#fff',
-    },
-  },
-});
+    const StyledImg = styled.img`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(0%, -50%);
+  `
+    const StyledTypography = styled(Typography)`
+    flexGrow: 1;
+  `
+    return (
+      <Grid item>
+        <StyledTypography
+          variant="h6"
+        >
+          <img
+            src="https://i.imgur.com/WLv1TO2.png"
+            alt="CounterPlus"
+            height={iconSize}
+          />
+        </StyledTypography>
+      </Grid>
+    )
+  };
 
+  const menu = () => {
+
+    const StyledToggleButton = styled(ToggleButton)`
+    border: 0,
+    borderRadius: 50
+  `
+
+    return (
+      <Grid item>
+        <div>
+          <StyledToggleButton
+            value='posReversed'
+            selected={this.state.posReversed}
+            onChange={() => { this.setState() }}
+          >
+
+          </StyledToggleButton>
+        </div>
+      </Grid>
+    )
+  }
+
+  const StyledAppBar = AppBar
+  return (
+    <div>
+      <StyledAppBar>
+        <Toolbar>
+          <Grid
+            justify='space-between'
+            container
+          >
+            {title(30)}
+          </Grid>
+        </Toolbar>
+      </StyledAppBar>
+    </div>
+    )
+  };
+  
+  /*
+  
 class App extends Component {
 
-  constructor(props) {
-    super(props);
-    this.classes = props.classes;
+        constructor(props) {
+        super(props);
+      this.classes = props.classes;
     this.state = {
-      windowWidth: window.innerWidth,
+        windowWidth: window.innerWidth,
       windowHeight: window.innerHeight,
       redoEnabled: false,
       undoEnabled: false,
@@ -67,108 +93,108 @@ class App extends Component {
     }
     this.manager = new ScoreManager();
     this.manager.updateBarInterface = (redo, undo) => {
-      this.setState({
-        redoEnabled: redo,
-        undoEnabled: undo,
-      })
-    }
-    this.manager.onEndGame = (res) => {
-      this.props.history.push({
-        pathname: '/CounterPlus/result',
-        state: { result: res }
-      })
-    }
+        this.setState({
+          redoEnabled: redo,
+          undoEnabled: undo,
+        })
+      }
+      this.manager.onEndGame = (res) => {
+        this.props.history.push({
+          pathname: '/CounterPlus/result',
+          state: { result: res }
+        })
+      }
 
-    this.handleResize = this.handleResize.bind(this);
-  }
-
+      this.handleResize = this.handleResize.bind(this);
+    }
+  
   componentDidMount() {
-    window.addEventListener("resize", this.handleResize);
-  }
+        window.addEventListener("resize", this.handleResize);
+    }
   componentWillUnmount() {
-    window.addEventListener("resize", null);
-  }
+        window.addEventListener("resize", null);
+    }
   handleResize(WindowSize, event) {
 
-    setTimeout(function () {
-      window.scrollTo(0, 0);
-      this.setState({ windowWidth: window.innerWidth })
-    }.bind(this), 500)
-  }
+        setTimeout(function () {
+          window.scrollTo(0, 0);
+          this.setState({ windowWidth: window.innerWidth })
+        }.bind(this), 500)
+      }
 
-  handleClick = (event) => {
-    this.setState({ anchorEl: event.currentTarget })
-  }
+      handleClick = (event) => {
+        this.setState({ anchorEl: event.currentTarget })
+      }
 
-  handleClose = () => {
-    this.setState({ anchorEl: null })
-  }
+      handleClose = () => {
+        this.setState({ anchorEl: null })
+      }
 
-  render() {
+      render() {
 
-    let appBar = (left, right) => {
+        let appBar = (left, right) => {
       if (this.state.windowWidth > 450) {
         return (
           <AppBar position="fixed" color="primary" style={{ boxShadow: 'none' }}>
-            <Toolbar>
-              <Grid
-                justify="space-between" // Add it here :)
-                container
-              >
-                {left("20vw", "0%")}
+        <Toolbar>
+          <Grid
+            justify="space-between" // Add it here :)
+            container
+          >
+            {left("20vw", "0%")}
 
-                {right}
+            {right}
 
-              </Grid>
-            </Toolbar>
-          </AppBar>
-        )
+          </Grid>
+        </Toolbar>
+      </AppBar>
+      )
       } else if (this.state.windowWidth > 370) {
         return (
           <AppBar position="fixed" color="primary" style={{ boxShadow: 'none' }}>
-            <Toolbar>
-              <Grid
-                justify="space-between" // Add it here :)
-                container
-              >
-                {left("12vw", "0%")}
+        <Toolbar>
+          <Grid
+            justify="space-between" // Add it here :)
+            container
+          >
+            {left("12vw", "0%")}
 
-                {right}
+            {right}
 
-              </Grid>
-            </Toolbar>
-          </AppBar>
-        )
+          </Grid>
+        </Toolbar>
+      </AppBar>
+      )
       } else {
         return (
           <AppBar position="fixed" color="primary" style={{ boxShadow: 'none' }}>
-            <Toolbar>
-              <Grid
-                justify="space-between" // Add it here :)
-                container
-              >
-                {left("8vw", "0%")}
+        <Toolbar>
+          <Grid
+            justify="space-between" // Add it here :)
+            container
+          >
+            {left("8vw", "0%")}
 
-                {right}
+            {right}
 
-              </Grid>
-            </Toolbar>
-          </AppBar>
-        )
-      }
+          </Grid>
+        </Toolbar>
+      </AppBar>
+      )
     }
+  }
 
     let title = (iconSize, transform) => {
       return (
         <Grid item>
-          <Typography variant="h6" className={this.classes.title}>
-            <img src="https://i.imgur.com/WLv1TO2.png" alt="CounterPlus" height={iconSize}
-              style={{
-                position: 'absolute', top: '50%', left: { transform },
-                transform: 'translate(0%, -50%)'
-              }} />
-          </Typography>
-        </Grid>
+        <Typography variant="h6" className={this.classes.title}>
+          <img src="https://i.imgur.com/WLv1TO2.png" alt="CounterPlus" height={iconSize}
+            style={{
+              position: 'absolute', top: '50%', left: { transform },
+              transform: 'translate(0%, -50%)'
+            }} />
+        </Typography>
+      </Grid>
       )
     }
 
@@ -246,21 +272,6 @@ class App extends Component {
               />
             </MenuItem>
 
-            {/* <FormControl>
-              <Select
-                value={10}
-                onChange={() => { }}
-                inputProps={{
-                  name: 'age',
-                  id: 'age-simple',
-                }}
-              >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-              </Select>
-            </FormControl> */}
-
             <MenuItem >
               <FormControl>
                 <Select
@@ -293,8 +304,8 @@ class App extends Component {
 
         </div>
       </Grid >
-    )
-    return (
+      )
+      return (
       <div className={this.classes.root} >
         <Helmet>
           <meta name="apple-mobile-web-app-title" content="CounterPlus" />
@@ -315,8 +326,10 @@ class App extends Component {
           </div>
         </RemoveScroll>
       </div >
-    );
+      );
+    }
   }
-}
-
-export default withRouter(withStyles(useStyles)(App));
+  
+  export default withRouter(withStyles(useStyles)(App));
+  
+*/

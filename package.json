@@ -16,7 +16,8 @@
     "react-remove-scroll": "^2.0.4",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.1",
-    "react-share": "^3.0.1"
+    "react-share": "^3.0.1",
+    "styled-components": "^5.0.0-beta.9"
   },
   "homepage": "http://caprolactam2450.github.io/CounterPlus",
   "scripts": {
