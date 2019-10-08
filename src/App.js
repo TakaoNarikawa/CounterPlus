@@ -1,12 +1,35 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import { AppBar, Toolbar, Typography, Grid, ToggleButton } from '@material-ui/core'
+import { AppBar, Toolbar, Typography, IconButton, Grid, MenuItem, Menu, Button, FormControlLabel, Checkbox, FormHelperText, FormControl, Select } from '@material-ui/core'
+import { ToggleButton } from '@material-ui/lab';
+import { ArrowBackIos, ArrowForwardIos, SwapHorizOutlined } from '@material-ui/icons';
+import MenuIcon from '@material-ui/icons/Menu'
+
+import ScoreManager from './ScoreManager'
 
 
-export default () => {
+export default (props) => {
 
-  const [redoEnabled, undoEnabled, posReversed, swipeReversed] = useState(false)
+  const manager = new ScoreManager();
+
+  const [redoEnabled, setRedoEnabled] = useState(false)
+  const [undoEnabled, setUndoEnabled] = useState(false)
+  const [posReversed, setPosReversed] = useState(false)
+  const [swipeReversed, setSwipeReversed] = useState(false)
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [setNum, setSetNum] = useState(5)
+
+  const StyledLabel = styled.p`
+    textAlign: center;
+  `
+  const StyledFormControlLabel = styled(FormControlLabel)`
+    marginLeft: 0
+  `
+  const StyledToggleButton = styled(ToggleButton)`
+    border: 0,
+    borderRadius: 50
+  `
 
   const title = (iconSize) => {
 
@@ -20,41 +43,122 @@ export default () => {
     flexGrow: 1;
   `
     return (
-      <Grid item>
-        <StyledTypography
-          variant="h6"
-        >
-          <img
-            src="https://i.imgur.com/WLv1TO2.png"
-            alt="CounterPlus"
-            height={iconSize}
-          />
-        </StyledTypography>
-      </Grid>
+      <StyledTypography
+        variant="h6"
+      >
+        <img
+          src="https://i.imgur.com/WLv1TO2.png"
+          alt="CounterPlus"
+          height={iconSize}
+        />
+      </StyledTypography>
     )
   };
+  
+  const buttons = (
+    <div>
+      <StyledToggleButton
+        value='posReversed'
+        selected={posReversed}
+        onChange={() => { setPosReversed(!posReversed) }}
+      >
+        <SwapHorizOutlined />
+      </StyledToggleButton>
 
-  const menu = () => {
+      <IconButton
+        disabled={!undoEnabled}
+        onClick={() => { manager.undo() }}
+      >
+        <ArrowBackIos />
+      </IconButton>
 
-    const StyledToggleButton = styled(ToggleButton)`
-    border: 0,
-    borderRadius: 50
-  `
+      <IconButton
+        disabled={!undoEnabled}
+        onClick={() => { manager.redo() }}
+      >
+        <ArrowForwardIos />
+      </IconButton>
 
-    return (
-      <Grid item>
-        <div>
-          <StyledToggleButton
-            value='posReversed'
-            selected={this.state.posReversed}
-            onChange={() => { this.setState() }}
-          >
+      <Button
+        onClick={(e) => { setAnchorEl(e.currentTarget) }}
+      >
+        <MenuIcon />
+      </Button>
 
-          </StyledToggleButton>
-        </div>
-      </Grid>
-    )
-  }
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={() => { setAnchorEl(null) }}
+      >
+        <MenuItem onClick={() => {
+          let conf = window.confirm('現在のスコアをリセットしても良いですか？');
+          if (conf) {
+            manager.reset()
+          }
+          setAnchorEl(null)
+        }}>リセット</MenuItem>
+
+        <MenuItem onClick={() => {
+          let res = manager.result();
+          props.history.push({
+            pathname: '/CounterPlus/result',
+            state: { result: res }
+          })
+        }}>
+          <StyledLabel>
+            対戦結果を見る
+          </StyledLabel>
+        </MenuItem>
+
+        <MenuItem >
+          <StyledFormControlLabel
+            value="swipeReversed"
+            control={<
+              Checkbox color="primary"
+              onChange={e => {
+                setSwipeReversed(!swipeReversed);
+                setAnchorEl(null)
+              }}
+              checked={swipeReversed}
+            />}
+            label="スワイプの向きを逆にする"
+            labelPlacement="start"
+          />
+        </MenuItem>
+
+        <MenuItem >
+          <FormControl>
+            <Select
+              value={setNum}
+              onChange={(e) => {
+                // let finalSetNum = this.manager.calcFinalSetNum(e.target.value)
+                // if (this.manager.p1.set > finalSetNum || this.manager.p2.set > finalSetNum) {
+                //   alert("現在のセット数は\nすでに指定された数のファイナルセットを上回っています")
+                // } else {
+                setSetNum(e.target.value)
+                //   this.manager.changeGameset(e.target.value)
+                // }
+              }}
+              name="name"
+              inputProps={{
+                name: 'gameset',
+                id: 'gameset-id',
+              }}
+            >
+              <MenuItem value={3}>3ゲーム</MenuItem>
+              <MenuItem value={5}>5ゲーム</MenuItem>
+              <MenuItem value={7}>7ゲーム</MenuItem>
+            </Select>
+          </FormControl>
+
+        </MenuItem>
+      </Menu>
+    </div>
+  )
+
+  
 
   const StyledAppBar = AppBar
   return (
@@ -65,7 +169,12 @@ export default () => {
             justify='space-between'
             container
           >
-            {title(30)}
+            <Grid item>
+              {title(30)}
+            </Grid>
+            <Grid item>
+              {buttons}
+            </Grid>
           </Grid>
         </Toolbar>
       </StyledAppBar>

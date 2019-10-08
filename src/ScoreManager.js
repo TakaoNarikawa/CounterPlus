@@ -34,6 +34,9 @@ export default class ScoreManager {
         this.logIndex = 0;
 
         this.changeGameset(5);
+
+        this.updateContentInterface = () => {}
+        this.updateBarInterface = () => {}
     }
 
     changeGameset = (n) => {
